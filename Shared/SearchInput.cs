@@ -7,9 +7,9 @@ namespace Zebble
     {
         float CancelButtonActualWidth;
         bool FirstRun = true;
-        public readonly ImageView Icon = new ImageView { Id = "Icon", ZIndex = 100, Enabled = false }.Height(100.Percent()).Absolute().Stretch(Stretch.OriginalRatio);
-        public readonly TextInput TextBox = new TextInput { KeyboardActionType = KeyboardActionType.Search, Id = "TextBox", Placeholder = "Search", ZIndex = 1 };
-        public readonly Button CancelButton = new Button { Text = "Cancel", Id = "CancelButton", ZIndex = 1, Absolute = true };
+        public readonly ImageView Icon = new ImageView { Id = "Icon", Enabled = false }.Height(100.Percent()).Absolute().Stretch(Stretch.OriginalRatio);
+        public readonly TextInput TextBox = new TextInput { KeyboardActionType = KeyboardActionType.Search, Id = "TextBox", Placeholder = "Search" };
+        public readonly Button CancelButton = new Button { Text = "Cancel", Id = "CancelButton", Absolute = true };
         public readonly AsyncEvent Searched = new AsyncEvent();
 
         public override async Task OnInitializing()
@@ -25,13 +25,14 @@ namespace Zebble
             CancelButton.PreRendered.Handle(Arrange);
             await Add(CancelButton);
 
-            this.On(x => x.Shown, (Action)WhenShown);
+            this.On(x => x.Shown, WhenShown);
         }
 
-        void WhenShown()
+        async Task WhenShown()
         {
             CancelButtonActualWidth = CancelButton.ActualWidth;
             Icon.X(CalculateIconX(focused: false));
+            await Icon.SendToBack();
         }
 
         Task Arrange()
