@@ -66,6 +66,7 @@ namespace Zebble
                 {
                     textStart += CancelButtonActualWidth / 2;
                 }
+
                 iconX = textStart - TextBox.Padding.Left() - TextBox.Margin.Left();
 
                 iconX -= Icon.ActualWidth;
