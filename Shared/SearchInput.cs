@@ -7,7 +7,7 @@ namespace Zebble
     {
         float CancelButtonActualWidth;
         bool FirstRun = true;
-        public readonly ImageView Icon = new ImageView { Id = "Icon", Enabled = false }.Height(100.Percent()).Absolute().Stretch(Stretch.OriginalRatio);
+        public readonly ImageView Icon = new ImageView { Id = "Icon", Enabled = false }.Width(40).Height(100.Percent()).Absolute().Stretch(Stretch.OriginalRatio);
         public readonly TextInput TextBox = new TextInput { KeyboardActionType = KeyboardActionType.Search, Id = "TextBox", Placeholder = "Search" };
         public readonly Button CancelButton = new Button { Text = "Cancel", Id = "CancelButton", Absolute = true };
         public readonly AsyncEvent Searched = new AsyncEvent();
@@ -28,11 +28,13 @@ namespace Zebble
             this.On(x => x.Shown, WhenShown);
         }
 
-        async Task WhenShown()
+        Task WhenShown()
         {
             CancelButtonActualWidth = CancelButton.ActualWidth;
-            Icon.X(CalculateIconX(focused: false));
-            await Icon.SendToBack();
+            var iconXPosition = CalculateIconX(focused: false);
+            Icon.X(iconXPosition);
+
+            return Task.CompletedTask;
         }
 
         Task Arrange()
@@ -40,9 +42,11 @@ namespace Zebble
             CancelButton.Width(CancelButton.Font.GetTextWidth(CancelButton.Text.OrEmpty()) +
                 CancelButton.Padding.Horizontal());
 
-            CancelButton.X(CalculateCancelButtonX(focused: false));
+            var cancelButtonXPosition = CalculateCancelButtonX(focused: false);
+            var iconXPosition = CalculateIconX(focused: false);
 
-            Icon.X(CalculateIconX(focused: false));
+            CancelButton.X(cancelButtonXPosition);
+            Icon.X(iconXPosition);
 
             return Task.CompletedTask;
         }
@@ -77,7 +81,7 @@ namespace Zebble
         {
             if (focused)
             {
-                return Padding.Left() + TextBox.ActualWidth + TextBox.Margin.Horizontal() + CancelButton.Margin.Left();
+                return (Padding.Horizontal() + TextBox.ActualWidth + TextBox.Margin.Horizontal() + CancelButton.Margin.Left()) - CancelButtonActualWidth;
             }
 
             return ActualWidth + Margin.Horizontal();
@@ -89,20 +93,20 @@ namespace Zebble
             set => TextBox.Text = value.TrimOrEmpty();
         }
 
-        Task FocusChanged(bool focused)
+        async Task FocusChanged(bool focused)
         {
             FirstRun = false;
-            void change()
-            {
-                CancelButton.Width(focused ? CancelButtonActualWidth : 0);
-                SetPseudoCssState("focus", focused).RunInParallel();
-                Icon.X(CalculateIconX(focused));
-                TextBox.Width(ActualWidth - Padding.Horizontal() - TextBox.Margin.Horizontal() - (focused ? CancelButton.ActualWidth + CancelButton.Margin.Horizontal() : 0));
-                CancelButton.X(CalculateCancelButtonX(focused));
-            }
 
-            // Ensure animations on all objects will apply:
-            return TextBox.Animate(t => Icon.Animate(i => CancelButton.Animate(c => change()).RunInParallel()).RunInParallel());
+            SetPseudoCssState("focus", focused).RunInParallel();
+            var cancelButtonXPosition = CalculateCancelButtonX(focused);
+            var iconXPosition = CalculateIconX(focused);
+
+            CancelButton.Width(focused ? CancelButtonActualWidth : 0);
+            CancelButton.Animate(cb => cb.X(cancelButtonXPosition)).RunInParallel();
+            Icon.Animate(i => i.X(iconXPosition)).RunInParallel();
+
+            await TextBox.Animate(txt => txt.Width(ActualWidth - Padding.Horizontal() - TextBox.Margin.Horizontal() -
+                (focused ? CancelButton.ActualWidth + CancelButton.Margin.Horizontal() : 0)));
         }
 
         public override void Dispose()
