@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
   <metadata>
     <id>Zebble.SearchInput</id>
-    <version>3.18.263</version>
+    <version>3.18.264</version>
     <title>Search Input for Zebble (Xamarin)</title>
     <projectUrl>https://github.com/Geeksltd/Zebble.SearchInput</projectUrl>
     <iconUrl>https://raw.githubusercontent.com/Geeksltd/Zebble.SearchInput/master/Shared/NuGet/Icon.png</iconUrl>
