@@ -10,8 +10,8 @@ namespace Zebble
         public readonly ImageView Icon = new ImageView { Id = "Icon", Enabled = false }.Width(40).Height(100.Percent()).Absolute().Stretch(Stretch.OriginalRatio);
         public readonly TextInput TextBox = new TextInput { KeyboardActionType = KeyboardActionType.Search, Id = "TextBox", Placeholder = "Search" };
         public readonly Button CancelButton = new Button { Text = "Cancel", Id = "CancelButton", Absolute = true };
-        public readonly AsyncEvent OnSearched = new AsyncEvent();
-        public readonly AsyncEvent OnSearch = new AsyncEvent();
+        public readonly AsyncEvent Searched = new AsyncEvent();
+        public readonly AsyncEvent Searching = new AsyncEvent();
 
         public override async Task OnInitializing()
         {
@@ -19,8 +19,8 @@ namespace Zebble
 
             await Add(TextBox);
             TextBox.UserFocusChanged.Handle(FocusChanged);
-            TextBox.UserTextChanged.Handle(OnSearch.Raise);
-            TextBox.UserTextChangeSubmitted.Handle(OnSearched.Raise);
+            TextBox.UserTextChanged.Handle(Searching.Raise);
+            TextBox.UserTextChangeSubmitted.Handle(Searched.Raise);
 
             await Add(Icon);
 
@@ -114,8 +114,8 @@ namespace Zebble
 
         public override void Dispose()
         {
-            OnSearched?.Dispose();
-            OnSearch?.Dispose();
+            Searched?.Dispose();
+            Searching?.Dispose();
             base.Dispose();
         }
     }
