@@ -7,7 +7,7 @@ namespace Zebble
     {
         float CancelButtonActualWidth;
         bool FirstRun = true;
-        public readonly ImageView Icon = new ImageView { Id = "Icon", Enabled = false }.Width(40).Height(100.Percent()).Absolute().Stretch(Stretch.Fit);
+        public readonly ImageView Icon = new ImageView { Id = "Icon", Enabled = false, Absolute = true };
         public readonly TextInput TextBox = new TextInput { KeyboardActionType = KeyboardActionType.Search, Id = "TextBox", Placeholder = "Search" };
         public readonly Button CancelButton = new Button { Text = "Cancel", Id = "CancelButton", Absolute = true };
         public readonly AsyncEvent Searched = new AsyncEvent();
