@@ -1,4 +1,4 @@
-[logo]: https://raw.githubusercontent.com/Geeksltd/Zebble.SearchInput/master/Shared/NuGet/Icon.png "Zebble.SearchInput"
+﻿[logo]: https://raw.githubusercontent.com/Geeksltd/Zebble.SearchInput/master/icon.png "Zebble.SearchInput"
 
 
 ## Zebble.SearchInput
