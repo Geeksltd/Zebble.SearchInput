@@ -7,7 +7,7 @@
     <RootNamespace>Zebble</RootNamespace>
     <PackageId>Zebble.SearchInput</PackageId>
     <Product>$(AssemblyName) ($(TargetFramework))</Product>
-    <Version>3.18.275.0</Version>
+    <Version>3.18.276.0</Version>
     <PackOnBuild>true</PackOnBuild>
     <NeutralLanguage>en</NeutralLanguage>
     <LangVersion>default</LangVersion>
