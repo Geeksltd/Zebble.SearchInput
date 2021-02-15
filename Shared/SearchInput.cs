@@ -19,7 +19,7 @@ namespace Zebble
             await base.OnInitializing();
 
             await Add(TextBox);
-            TextBox.UserFocusChanged.Handle(FocusChanged);
+            TextBox.Focused.ChangedByInput += () => FocusChanged();
             TextBox.UserTextChanged.Handle(Searching.Raise);
             TextBox.UserTextChangeSubmitted.Handle(Searched.Raise);
 
@@ -97,8 +97,9 @@ namespace Zebble
             set => TextBox.Text = value.TrimOrEmpty();
         }
 
-        async Task FocusChanged(bool focused)
+        void FocusChanged()
         {
+            var focused = TextBox.Focused.Value;
             FirstRun = false;
 
             SetPseudoCssState("focus", focused).RunInParallel();
@@ -109,8 +110,8 @@ namespace Zebble
             CancelButton.Animate(cb => cb.X(cancelButtonXPosition)).RunInParallel();
             Icon.Animate(i => i.X(iconXPosition)).RunInParallel();
 
-            await TextBox.Animate(txt => txt.Width(ActualWidth - Padding.Horizontal() - TextBox.Margin.Horizontal() -
-                (focused ? CancelButton.ActualWidth + CancelButton.Margin.Horizontal() : 0)));
+            TextBox.Animate(txt => txt.Width(ActualWidth - Padding.Horizontal() - TextBox.Margin.Horizontal() -
+              (focused ? CancelButton.ActualWidth + CancelButton.Margin.Horizontal() : 0))).RunInParallel();
         }
 
         public override void Dispose()
